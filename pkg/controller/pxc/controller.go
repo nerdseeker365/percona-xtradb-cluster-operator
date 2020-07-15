@@ -184,6 +184,20 @@ func (r *ReconcilePerconaXtraDBCluster) Reconcile(request reconcile.Request) (re
 		}
 	}()
 
+	err = r.reconcileUsersSecret(o)
+	if err != nil {
+		return reconcile.Result{}, fmt.Errorf("reconcile users secret: %v", err)
+	}
+
+	if o.CompareVersionWith("1.5.0") >= 0 {
+		err = r.reconcileUsers(o)
+		if err != nil {
+			return rr, errors.Wrap(err, "reconcileUsers")
+		}
+	}
+
+	r.resyncPXCUsersWithProxySQL(o)
+
 	// update CR if there was changes that may be read by another cr (e.g. pxc-backup)
 	if changed {
 		err = r.client.Update(context.TODO(), o)
@@ -231,11 +245,6 @@ func (r *ReconcilePerconaXtraDBCluster) Reconcile(request reconcile.Request) (re
 
 		// object is being deleted, no need in further actions
 		return rr, err
-	}
-
-	err = r.reconcileUsersSecret(o)
-	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("reconcile users secret: %v", err)
 	}
 
 	err = r.deploy(o)
@@ -419,15 +428,6 @@ func (r *ReconcilePerconaXtraDBCluster) Reconcile(request reconcile.Request) (re
 	if err != nil {
 		return reconcile.Result{}, fmt.Errorf("failed to ensure version: %v", err)
 	}
-
-	if o.CompareVersionWith("1.5.0") >= 0 {
-		err = r.reconcileUsers(o)
-		if err != nil {
-			return rr, errors.Wrap(err, "reconcileUsers")
-		}
-	}
-
-	r.resyncPXCUsersWithProxySQL(o)
 
 	return rr, nil
 }
