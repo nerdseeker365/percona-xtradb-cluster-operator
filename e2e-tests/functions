@@ -10,6 +10,7 @@ IMAGE=${IMAGE:-"perconalab/percona-xtradb-cluster-operator:${GIT_BRANCH}"}
 IMAGE_PXC=${IMAGE_PXC:-"perconalab/percona-xtradb-cluster-operator:master-pxc8.0"}
 IMAGE_PMM=${IMAGE_PMM:-"perconalab/percona-xtradb-cluster-operator:master-pmm"}
 IMAGE_PROXY=${IMAGE_PROXY:-"perconalab/percona-xtradb-cluster-operator:master-proxysql"}
+IMAGE_HAPROXY=${IMAGE_HAPROXY:-"perconalab/percona-xtradb-cluster-operator:master-haproxy"}
 IMAGE_BACKUP=${IMAGE_BACKUP:-"perconalab/percona-xtradb-cluster-operator:master-pxc8.0-backup"}
 tmp_dir=$(mktemp -d)
 sed=$(which gsed || which sed)
@@ -506,7 +507,8 @@ cat_config() {
         | $sed -e "s#image:.*\/percona-xtradb-cluster:.*\$#image: $IMAGE_PXC#" \
         | $sed -e "s#image:.*-pmm\$#image: $IMAGE_PMM#" \
         | $sed -e "s#image:.*-backup\$#image: $IMAGE_BACKUP#" \
-        | $sed -e "s#image:.*-proxysql\$#image: $IMAGE_PROXY#"
+        | $sed -e "s#image:.*-proxysql\$#image: $IMAGE_PROXY#" \
+        | $sed -e "s#image:.*-haproxy\$#image: $IMAGE_HAPROXY#" 
 }
 
 apply_config() {
