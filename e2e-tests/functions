@@ -540,7 +540,7 @@ cat_config() {
         | $sed -e "s#image:.*-pmm\$#image: $IMAGE_PMM#" \
         | $sed -e "s#image:.*-backup\$#image: $IMAGE_BACKUP#" \
         | $sed -e "s#image:.*-proxysql\$#image: $IMAGE_PROXY#" \
-        | $sed -e "s#image:.*-haproxy\$#image: $IMAGE_HAPROXY#" 
+        | $sed -e "s#image:.*-haproxy\$#image: $IMAGE_HAPROXY#" \
         | $sed -e "s#apply:.*#apply: Never#"
 }
 
