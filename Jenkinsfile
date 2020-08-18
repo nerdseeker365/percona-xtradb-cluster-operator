@@ -253,6 +253,7 @@ pipeline {
                         runTest('auto-tuning', 'basic')
                         runTest('proxysql-sidecar-res-limits', 'basic')
                         runTest('users', 'basic')
+                        runTest('haproxy', 'basic')
                         ShutdownCluster('basic')
                    }
                 }
